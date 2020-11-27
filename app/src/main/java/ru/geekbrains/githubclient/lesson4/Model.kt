@@ -19,7 +19,7 @@ object Model {
     fun convert(bitmap: Bitmap, fileImg: String, fileName: String): ConnectableObservable<Int> =
             Observable.create<Int> { emitter ->
 
-                val file = File(IMAGE_FILE)//fileImg +
+                val file = File(IMAGE_FILE)
                 file.mkdirs()
                 val result = String.format("%s%s/%s", IMAGE_FILE, fileImg, fileName)
                 val out = FileOutputStream(File(result))

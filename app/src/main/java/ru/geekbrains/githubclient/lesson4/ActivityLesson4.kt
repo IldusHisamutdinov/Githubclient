@@ -53,12 +53,14 @@ class ActivityLesson4 : MvpAppCompatActivity(), View {
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, resdata: Intent?) {
-        super.onActivityResult(requestCode, resultCode,resdata)
-        if (requestCode != REQUEST_CODE || resultCode != RESULT_OK) return
+        super.onActivityResult(requestCode, resultCode, resdata)
+        if (requestCode != REQUEST_CODE || resultCode != RESULT_OK)
+            return
 
         resdata?.run {
-            data?.also {
-                presenter.convertImage(this@ActivityLesson4, it)
+            data?.apply {
+                presenter.convertImage(this@ActivityLesson4, this)
+
             }
         }
     }
