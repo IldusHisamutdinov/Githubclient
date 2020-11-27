@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -13,12 +14,14 @@ import kotlinx.android.synthetic.main.activity_lesson4.*
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
 import ru.geekbrains.githubclient.R
+import java.io.File
 
 class ActivityLesson4 : MvpAppCompatActivity(), View {
     private val REQUEST_CODE = 3
     private val REQUEST_PERMISSION_CODE = 7
     private val REQUESTED_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE
-
+    val imagesRoot: File?
+        get() = baseContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
     private fun checkPermission() =
             ContextCompat.checkSelfPermission(this, REQUESTED_PERMISSION) == PackageManager.PERMISSION_GRANTED
 
@@ -42,6 +45,7 @@ class ActivityLesson4 : MvpAppCompatActivity(), View {
         button.setOnClickListener {
             pickImage()
         }
+
     }
 
 
@@ -57,12 +61,13 @@ class ActivityLesson4 : MvpAppCompatActivity(), View {
         if (requestCode != REQUEST_CODE || resultCode != RESULT_OK)
             return
 
-        resdata?.run {
-            data?.apply {
-                presenter.convertImage(this@ActivityLesson4, this)
-
-            }
-        }
+          resdata?.run {
+              data?.also {imagePath ->
+                  getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.also { imagesRoot ->
+                      presenter.convertImage(imagePath, imagesRoot.toString())
+                  }
+              }
+          }
     }
 
 

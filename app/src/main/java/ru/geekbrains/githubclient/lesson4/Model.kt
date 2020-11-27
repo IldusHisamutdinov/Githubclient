@@ -3,6 +3,8 @@ package ru.geekbrains.githubclient.lesson4
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -16,14 +18,17 @@ object Model {
     private val IMAGE_FILE = ""
     var convImage: Uri? = null
 
-    fun convert(bitmap: Bitmap, fileImg: String, fileName: String): ConnectableObservable<Int> =
+    @RequiresApi(Build.VERSION_CODES.P)
+    fun convert(imagePath: Uri, imagesRoot: String): ConnectableObservable<Int> =
             Observable.create<Int> { emitter ->
 
                 val file = File(IMAGE_FILE)
                 file.mkdirs()
-                val result = String.format("%s%s/%s", IMAGE_FILE, fileImg, fileName)
+                val result = String.format("%s%s/%s", imagesRoot, IMAGE_FILE, imagePath.getName())
                 val out = FileOutputStream(File(result))
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+
+                imagePath.getCapturedImage()?.compress(Bitmap.CompressFormat.PNG, 100, out)?:
+                emitter.onError(Throwable("Картинка ERROR"))
                 emitter.onNext(2)
                 convImage = result.toUri()
                 out.close()
