@@ -1,33 +1,37 @@
 package ru.geekbrains.githubclient.mvp.presenters
 
 import android.util.Log
+import io.reactivex.rxjava3.core.Scheduler
 
 import moxy.MvpPresenter
 import ru.geekbrains.githubclient.mvp.model.entity.GithubUser
-import ru.geekbrains.githubclient.mvp.model.entity.GithubUsersRepo
-import ru.geekbrains.githubclient.mvp.presenters.list.IUserListPresenter
-import ru.geekbrains.githubclient.mvp.view.UserItemView
+import ru.geekbrains.githubclient.mvp.model.repo.IGithubUsersRepo
+import ru.geekbrains.githubclient.mvp.presenters.list.ILoginListPresenter
+import ru.geekbrains.githubclient.mvp.view.LoginItemView
 import ru.geekbrains.githubclient.mvp.view.UsersView
 import ru.geekbrains.githubclient.navigation.Screens
 import ru.terrakok.cicerone.Router
 
 class UsersPresenter(
-        private val usersRepo: GithubUsersRepo,
-        private val router: Router
+        val mainThreadScheduler: Scheduler,
+        val usersRepo: IGithubUsersRepo,
+        val router: Router
 ) : MvpPresenter<UsersView>() {
 
-    class UsersListPresenter : IUserListPresenter {
+    class UsersListPresenter : ILoginListPresenter {
 
         val users = mutableListOf<GithubUser>()
 
-        override var itemClickListener: ((UserItemView) -> Unit)? = null
+        override var itemClickListener: ((LoginItemView) -> Unit)? = null
 
         override fun getCount() = users.size
 
-        override fun bindView(view: UserItemView) {
+        override fun bindView(view: LoginItemView) {
             val user = users[view.pos]
-            view.setLogin(user.login)
+            user.login?.let { view.setLogin(it)}
+            user.avatarUrl?.let { view.loadAvatar(it) }
         }
+
     }
 
     val usersListPresenter = UsersListPresenter()
@@ -38,18 +42,19 @@ class UsersPresenter(
         loadData()
 
         usersListPresenter.itemClickListener = {
-            Log.v("TAG", "itemClickListener: ${it.pos}")
-            router.navigateTo(Screens.LoginScreen(it.pos))
+            val user: GithubUser = usersListPresenter.users[it.pos]
+            router.navigateTo(Screens.LoginScreen(user))
         }
     }
 
     private fun loadData() {
         usersRepo.getUsers()
-                ?.subscribe({ onNext ->
-                    usersListPresenter.users.addAll(onNext)
+                .observeOn(mainThreadScheduler)
+                .subscribe({ repos ->
+                    usersListPresenter.users.clear()
+                    usersListPresenter.users.addAll(repos)
                     viewState.updateList()
-                },
-                        { error -> (Log.e("log", "Error: ${error}")) })
+                }, { error -> (Log.e("log", "Error: ${error}")) })
     }
 }
 
