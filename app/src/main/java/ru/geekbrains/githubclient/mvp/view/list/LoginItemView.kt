@@ -1,4 +1,4 @@
-package ru.geekbrains.githubclient.mvp.view
+package ru.geekbrains.githubclient.mvp.view.list
 
 interface LoginItemView: IItemView {
     fun setLogin(text: String)

@@ -9,7 +9,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_user.view.*
 import ru.geekbrains.githubclient.R
 import ru.geekbrains.githubclient.mvp.presenters.list.ILoginListPresenter
-import ru.geekbrains.githubclient.mvp.view.LoginItemView
+import ru.geekbrains.githubclient.mvp.view.list.LoginItemView
 import ru.geekbrains.githubclient.mvp.view.image.IImageLoader
 
 

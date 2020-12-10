@@ -8,7 +8,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_repos_user.view.*
 import ru.geekbrains.githubclient.R
 import ru.geekbrains.githubclient.mvp.presenters.list.IReposLoginPresenter
-import ru.geekbrains.githubclient.mvp.view.ReposLoginItemView
+import ru.geekbrains.githubclient.mvp.view.list.ReposLoginItemView
 
 class ReposLoginAdapter(val presenter: IReposLoginPresenter) : RecyclerView.Adapter<ReposLoginAdapter.ViewHolder>() {
 

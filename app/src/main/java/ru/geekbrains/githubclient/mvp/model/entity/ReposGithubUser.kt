@@ -7,13 +7,15 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ReposGithubUser(
         @Expose
-        val id: String? = null,
+        val id: String = "",
         @Expose
-        val name: String? = null,
+        val name: String = "",
         @Expose
-        val forks: Int? = null,
+        val forks: Int = 0,
         @Expose
-        val description: String? = null
-): Parcelable {
+        val userId: String = "",
+        @Expose
+        val description: String = ""
+) : Parcelable {
 }
 

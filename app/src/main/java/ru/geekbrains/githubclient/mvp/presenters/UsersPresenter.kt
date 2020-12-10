@@ -7,7 +7,7 @@ import moxy.MvpPresenter
 import ru.geekbrains.githubclient.mvp.model.entity.GithubUser
 import ru.geekbrains.githubclient.mvp.model.repo.IGithubUsersRepo
 import ru.geekbrains.githubclient.mvp.presenters.list.ILoginListPresenter
-import ru.geekbrains.githubclient.mvp.view.LoginItemView
+import ru.geekbrains.githubclient.mvp.view.list.LoginItemView
 import ru.geekbrains.githubclient.mvp.view.UsersView
 import ru.geekbrains.githubclient.navigation.Screens
 import ru.terrakok.cicerone.Router
@@ -55,6 +55,10 @@ class UsersPresenter(
                     usersListPresenter.users.addAll(repos)
                     viewState.updateList()
                 }, { error -> (Log.e("log", "Error: ${error}")) })
+    }
+    fun backPressed(): Boolean {
+        router.exit()
+        return true
     }
 }
 

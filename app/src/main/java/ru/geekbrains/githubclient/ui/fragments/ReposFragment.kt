@@ -44,6 +44,7 @@ class ReposFragment: MvpAppCompatFragment(), ReposLoginView, BackButtonListener 
 
     override fun backPressed() = presenter.backPressed()
     override fun init(reposGithubUser: ReposGithubUser) {
+        name.text = reposGithubUser.name
         forks_repos.text = reposGithubUser.forks.toString()
         description_repos.text = reposGithubUser.description
     }
