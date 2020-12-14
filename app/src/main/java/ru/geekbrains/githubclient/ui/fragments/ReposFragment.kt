@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_repos.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import ru.geekbrains.githubclient.GithubApplication
 import ru.geekbrains.githubclient.R
 import ru.geekbrains.githubclient.mvp.model.entity.ReposGithubUser
 import ru.geekbrains.githubclient.mvp.presenters.ReposLoginPresenter
 import ru.geekbrains.githubclient.mvp.view.ReposLoginView
 import ru.geekbrains.githubclient.ui.BackButtonListener
 
-class ReposFragment: MvpAppCompatFragment(), ReposLoginView, BackButtonListener {
+class ReposFragment : MvpAppCompatFragment(), ReposLoginView, BackButtonListener {
 
     companion object {
         const val REPOS_LOGIN = "reposLogin"
@@ -28,7 +27,7 @@ class ReposFragment: MvpAppCompatFragment(), ReposLoginView, BackButtonListener 
     }
 
     val presenter by moxyPresenter {
-        ReposLoginPresenter(GithubApplication.instance.router)
+        ReposLoginPresenter()
     }
 
     override fun onCreateView(
@@ -41,11 +40,12 @@ class ReposFragment: MvpAppCompatFragment(), ReposLoginView, BackButtonListener 
         presenter.repos = arguments?.getParcelable(REPOS_LOGIN)
     }
 
-
-    override fun backPressed() = presenter.backPressed()
     override fun init(reposGithubUser: ReposGithubUser) {
+        name.text = reposGithubUser.name
         forks_repos.text = reposGithubUser.forks.toString()
         description_repos.text = reposGithubUser.description
     }
+
+    override fun backPressed() = presenter.backPressed()
 
 }

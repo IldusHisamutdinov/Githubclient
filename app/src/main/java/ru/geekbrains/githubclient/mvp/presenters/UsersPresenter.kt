@@ -4,19 +4,27 @@ import android.util.Log
 import io.reactivex.rxjava3.core.Scheduler
 
 import moxy.MvpPresenter
+import ru.geekbrains.githubclient.GithubApplication
 import ru.geekbrains.githubclient.mvp.model.entity.GithubUser
 import ru.geekbrains.githubclient.mvp.model.repo.IGithubUsersRepo
 import ru.geekbrains.githubclient.mvp.presenters.list.ILoginListPresenter
-import ru.geekbrains.githubclient.mvp.view.LoginItemView
+import ru.geekbrains.githubclient.mvp.view.list.LoginItemView
 import ru.geekbrains.githubclient.mvp.view.UsersView
 import ru.geekbrains.githubclient.navigation.Screens
 import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
-class UsersPresenter(
-        val mainThreadScheduler: Scheduler,
-        val usersRepo: IGithubUsersRepo,
-        val router: Router
-) : MvpPresenter<UsersView>() {
+class UsersPresenter : MvpPresenter<UsersView>() {
+    @Inject
+    lateinit var scheduler: Scheduler
+    @Inject
+    lateinit var usersRepo: IGithubUsersRepo
+    @Inject
+    lateinit var router: Router
+    init {
+        GithubApplication.instance.appComponent.inject(this)
+    }
+
 
     class UsersListPresenter : ILoginListPresenter {
 
@@ -49,12 +57,16 @@ class UsersPresenter(
 
     private fun loadData() {
         usersRepo.getUsers()
-                .observeOn(mainThreadScheduler)
+                .observeOn(scheduler)
                 .subscribe({ repos ->
                     usersListPresenter.users.clear()
                     usersListPresenter.users.addAll(repos)
                     viewState.updateList()
                 }, { error -> (Log.e("log", "Error: ${error}")) })
+    }
+    fun backPressed(): Boolean {
+        router.exit()
+        return true
     }
 }
 
