@@ -30,9 +30,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
+//    kotlinOptions {
+//        jvmTarget = '1.8'
+//    }
 }
 
 dependencies {
@@ -67,8 +67,12 @@ dependencies {
     implementation "androidx.room:room-ktx:2.2.5"
  //   annotationProcessor "androidx.room:room-compiler:$room_version"
 //    implementation "android.arch.persistence.room:runtime:1.0.0"
-    kapt "android.arch.persistence.room:compiler:1.0.0"
+ //   kapt "android.arch.persistence.room:compiler:1.0.0"
     kapt "androidx.room:room-compiler:2.2.5"
+
+//Dager
+    implementation 'com.google.dagger:dagger:2.24'
+    kapt 'com.google.dagger:dagger-compiler:2.24'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
